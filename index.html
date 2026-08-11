@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>کارت دعوت ویژه محمد و مبینا</title>
+
+<!-- فراخوانی قطعی تمام فونت‌ها از گوگل -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Great+Vibes&family=Noto+Nastaliq+Urdu:wght@400;700&family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+  /* فراخوانی قطعی و تضمینی فونت ایران نستعلیق از سرور جهانی */
+  @font-face {
+    font-family: 'IranNastaliqWeb';
+    src: url('https://cdn.jsdelivr.net/gh/shahind/iran-nastaliq-web-font@master/fonts/iran-nastaliq.woff2') format('woff2'),
+         url('https://cdn.fontcdn.ir/Font/Persian/IranNastaliq/IranNastaliq.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* تنظیمات کلی صفحه */
+  body {
+    background-color: #ece6de;
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    margin: 0;
+    overflow: hidden; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    height: 100dvh; 
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* =========================================
+     سناریو ۱: پاکت نامه (رنگ زیتونی ملایم)
+     ========================================= */
+  #envelope-scene {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+    transition: opacity 1s ease, transform 1s ease;
+  }
+
+  .envelope {
+    width: 360px;
+    height: 250px;
+    background-color: #9ba885;
+    position: relative;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 15px 25px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  .envelope:hover { transform: translateY(-5px); }
+
+  .flap {
+    position: absolute;
+    top: 0; left: 0;
+    border-left: 180px solid transparent;
+    border-right: 180px solid transparent;
+    border-top: 150px solid #b5c0a1;
+    z-index: 3;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top;
+  }
+  .front {
+    position: absolute;
+    bottom: 0; left: 0;
+    border-left: 180px solid transparent;
+    border-right: 180px solid transparent;
+    border-bottom: 140px solid #8e9b7a;
+    z-index: 2;
+  }
+  .left-right {
+    position: absolute;
+    top: 0; left: 0;
+    border-left: 180px solid #a6b291;
+    border-right: 180px solid #a6b291;
+    border-top: 125px solid transparent;
+    border-bottom: 125px solid transparent;
+    z-index: 1;
+  }
+
+  .open .flap { transform: rotateX(180deg); }
+  
+  .click-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    z-index: 5;
+    pointer-events: none;
+    font-weight: 700;
+    font-size: 1.3rem;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    width: 100%;
+    text-align: center;
+    transition: opacity 0.3s;
+  }
+  .open .click-text { opacity: 0; }
+
+  /* =========================================
+     سناریو ۲: کارت کامل (دارای قابلیت اسکرول)
+     ========================================= */
+  #full-card-scene {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    height: 100dvh;
+    background-color: #ece6de; 
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 1.5s ease;
+    z-index: 10;
+    overflow-y: auto; 
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+  
+  #full-card-scene.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .hero-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    background-color: #fdfaf6;
+  }
+
+  .card-img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 1;
+  }
+
+  .top-center-text-img {
+    position: absolute;
+    top: 10vh; 
+    left: 40%; 
+    transform: translateX(-50%); 
+    width: 36%; 
+    max-width: 160px; 
+    opacity: 0; 
+    object-fit: contain;
+    z-index: 3;
+  }
+
+  /* =========================================
+     طراحی ژورنالی: چینش بقیه اجزا
+     ========================================= */
+  .text-overlay {
+    position: absolute;
+    top: 25vh; 
+    left: 0;
+    width: 100%;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    direction: ltr; 
+  }
+
+  /* تقویم */
+  .calendar-block {
+    width: 80%;
+    max-width: 280px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #444;
+    opacity: 0;
+  }
+
+  .cal-month {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem; 
+    font-weight: 700;
+    letter-spacing: 4px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .cal-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .cal-row.days {
+    font-family: 'Cinzel', serif;
+    font-style: italic;
+    font-size: 0.75rem; 
+    color: #555;
+  }
+
+  .cal-row.nums {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem; 
+    color: #333;
+    align-items: center;
+  }
+
+  .cal-row.nums span {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+  }
+
+  .heart-wrap {
+    position: relative;
+    z-index: 1;
+  }
+
+  .dotted-heart-line {
+    position: absolute;
+    top: -4px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    width: 44px; 
+    height: 70px; 
+    overflow: visible;
+    z-index: -1;
+  }
+
+  /* نوشته‌های میانی */
+  .save-the-date {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.8rem; 
+    color: #333;
+    margin-top: 35px; 
+    margin-bottom: -5px; 
+    opacity: 0;
+  }
+
+  .for-wedding {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: #555;
+    margin-top: 0px; 
+    margin-bottom: 5px;
+    opacity: 0;
+  }
+
+  /* استایل جدید اسامی به همراه نام خانوادگی با فونت نستعلیق */
+  .final-names-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 5px;
+    opacity: 0;
+  }
+
+  .name-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .first-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem; 
+    letter-spacing: 4px;
+    color: #333; 
+    font-weight: 700;
+  }
+
+  /* فامیلی با فونت نستعلیق */
+  .last-name {
+    font-family: 'Noto Nastaliq Urdu', 'IranNastaliqWeb', serif; 
+    font-size: 0.95rem; /* سایز کمی بزرگتر برای خوانایی نستعلیق */
+    letter-spacing: normal; /* غیرفعال کردن فاصله حروف برای فونت فارسی */
+    color: #777; 
+    margin-top: 2px;
+  }
+
+  .and-symbol {
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem;
+    color: #333;
+    margin-bottom: 15px; /* هم‌تراز کردن دقیق با اسم‌های اصلی */
+  }
+
+  /* آدرس با فونت نستعلیق */
+  .address-text {
+    font-family: 'Noto Nastaliq Urdu', 'IranNastaliqWeb', serif; 
+    font-size: 0.85rem; 
+    color: #333;
+    margin-top: 10px; 
+    direction: rtl; 
+    text-align: center;
+    line-height: 2.1; 
+    opacity: 0;
+  }
+
+  /* فلش انیمیشنی اسکرول */
+  .arrow-container {
+    position: absolute;
+    bottom: 3vh; 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .bounce-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    animation: bounce 2s infinite ease-in-out; 
+  }
+
+  .scroll-text {
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    font-size: 0.65rem;
+    font-weight: 400;
+    color: #677852;
+  }
+
+  .scroll-arrow {
+    width: 24px;
+    height: 35px;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); } 
+  }
+
+  /* انیمیشن‌ها */
+  #full-card-scene.active .fade-in-0 { animation: softFadeIn 1.5s ease forwards 0.5s; }
+  #full-card-scene.active .fade-in-1 { animation: softFadeIn 1.5s ease forwards 1s; }
+  #full-card-scene.active .fade-in-2 { animation: softFadeIn 1.5s ease forwards 1.8s; }
+  #full-card-scene.active .fade-in-3 { animation: softFadeIn 1.5s ease forwards 2.4s; }
+  #full-card-scene.active .fade-in-4 { animation: softFadeIn 1.5s ease forwards 3s; }
+  #full-card-scene.active .fade-in-5 { animation: softFadeIn 1.5s ease forwards 3.6s; } 
+  #full-card-scene.active .fade-in-6 { animation: softFadeIn 1.5s ease forwards 4.2s; } 
+
+  @keyframes softFadeIn {
+    0% { opacity: 0; transform: translateY(15px) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* =========================================
+     بخش دوم: کادر فرم و دکمه‌ها
+     ========================================= */
+  .interactive-area {
+    position: relative;
+    width: 100%;
+    background-color: #ece6de; 
+    padding: 60px 20px 80px 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    z-index: 5;
+  }
+
+  .actions-wrapper {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  #actions-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn {
+    padding: 14px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    font-size: 1.05rem;
+    transition: all 0.3s;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+  .btn:hover { opacity: 0.9; }
+  .btn:active { transform: scale(0.97); }
+  
+  .btn-yes { background-color: #677852; color: #ffffff; }
+  .btn-no { background-color: rgba(255,255,255,0.95); border: 2px solid #aaa; color: #555; }
+  .btn-no:hover { background-color: #fff; }
+  .btn-submit { background-color: #677852; color: #ffffff; margin-top: 15px; }
+
+  #form-container, #message-container { 
+    display: none; 
+    width: 100%; 
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease;
+  }
+  
+  input {
+    padding: 16px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #677852;
+    border-radius: 8px;
+    font-family: 'Vazirmatn', Tahoma, sans-serif;
+    text-align: center;
+    font-size: 1.1rem;
+    background-color: rgba(255,255,255,0.95);
+  }
+  input:focus { outline: none; box-shadow: 0 0 10px rgba(103, 120, 82, 0.4); }
+
+</style>
+</head>
+<body>
+
+  <!-- موزیک پس‌زمینه کارت -->
+  <audio id="bg-music" loop>
+    <source src="https://www.image2url.com/r2/default/audio/1786422312576-6593b595-487b-4fd4-a701-8db60ecc7bbf.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- سناریو 1: پاکت نامه -->
+  <div id="envelope-scene" onclick="openAndTransition()">
+    <div class="envelope" id="env">
+      <div class="flap"></div>
+      <div class="left-right"></div>
+      <div class="front"></div>
+      <div class="click-text">برای باز کردن کلیک کنید</div>
+    </div>
+  </div>
+
+  <!-- سناریو 2: کارت و اسکرول -->
+  <div id="full-card-scene">
+    
+    <div class="hero-section">
+      <img src="https://i.ibb.co/20dP0f9Y/photo-6035348144276575259-w.jpg" class="card-img" alt="کارت دعوت عروسی">
+      
+      <!-- عکس نوشته بالای کارت -->
+      <img src="https://i.ibb.co/Wv4gzPyV/fontfa-img20260809.png" class="top-center-text-img fade-in-0" alt="نوشته بالای کارت">
+      
+      <div class="text-overlay">
+        <!-- تقویم -->
+        <div class="calendar-block fade-in-1">
+          <div class="cal-month">SEPTEMBER</div>
+          <div class="cal-row days">
+            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+          </div>
+          <div class="cal-row nums">
+            <span>30</span><span>31</span><span>1</span>
+            
+            <span class="heart-wrap">
+              2
+              <svg class="dotted-heart-line" viewBox="0 0 100 160">
+                <path d="M 50 20 C 50 20 40 0 20 10 C 0 20 10 50 50 70 C 90 50 100 20 80 10 C 60 0 50 20 50 20 Z" fill="none" stroke="#444" stroke-width="2.5" stroke-dasharray="4,4"/>
+                <line x1="50" y1="70" x2="50" y2="150" stroke="#444" stroke-width="2.5" stroke-dasharray="4,4"/>
+              </svg>
+            </span>
+            
+            <span>3</span><span>4</span><span>5</span>
+          </div>
+        </div>
+
+        <div class="save-the-date fade-in-2">Save the date</div>
+        <div class="for-wedding fade-in-3">FOR THE WEDDING OF</div>
+        
+        <!-- ساختار جدید اسامی به همراه فامیلی با فونت نستعلیق -->
+        <div class="final-names-container fade-in-4">
+          <div class="name-block">
+            <span class="first-name">MOBINA</span>
+            <span class="last-name">طیبی</span>
+          </div>
+          
+          <span class="and-symbol">&</span>
+          
+          <div class="name-block">
+            <span class="first-name">MOHAMMAD</span>
+            <span class="last-name">ابراهیم زاده</span>
+          </div>
+        </div>
+        
+        <!-- آدرس سه خطی -->
+        <div class="address-text fade-in-5">
+          چهارشنبه ۱۱ شهریور ماه ۱۴۰۵<br>
+          از ساعت ۵ عصر<br>
+          شاندیز امام رضا ۴ - باغ تالار VIP عروس
+        </div>
+      </div>
+
+      <!-- فلش اسکرول همراه با متن -->
+      <div class="arrow-container fade-in-6" onclick="document.getElementById('full-card-scene').scrollBy({top: window.innerHeight, behavior: 'smooth'})">
+        <div class="bounce-wrap">
+          <span class="scroll-text">لطفاً بکشید</span>
+          <svg class="scroll-arrow" viewBox="0 0 24 40" fill="none" stroke="#677852" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="35"></line>
+            <polyline points="5 28 12 35 19 28"></polyline>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- بخش دوم: دکمه‌ها و فرم -->
+    <div class="interactive-area">
+      <div class="actions-wrapper">
+        <div id="actions-container">
+          <button class="btn btn-yes" onclick="showForm()">حتما شرکت میکنم</button>
+          <button class="btn btn-no" onclick="decline()">متاسفانه نمیتونم بیام</button>
+        </div>
+
+        <div id="form-container">
+          <input type="text" id="guestName" placeholder="نام خود را بنویسید...">
+          <button class="btn btn-submit" onclick="submitForm()">ثبت نام</button>
+        </div>
+
+        <div id="message-container"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function openAndTransition() {
+      // باز شدن پاکت
+      document.getElementById('env').classList.add('open');
+      
+      // پخش اتوماتیک موسیقی هنگام باز شدن پاکت
+      let music = document.getElementById('bg-music');
+      music.volume = 0.5; // تنظیم صدای ملایم موسیقی
+      music.play().catch(error => {
+          console.log("مرورگر اجازه پخش خودکار صدا را نداد.");
+      });
+      
+      setTimeout(() => {
+        let envScene = document.getElementById('envelope-scene');
+        envScene.style.opacity = '0';
+        envScene.style.transform = 'scale(1.1)'; 
+        
+        document.getElementById('full-card-scene').classList.add('active');
+        
+        setTimeout(() => {
+          envScene.style.display = 'none';
+        }, 1000);
+        
+      }, 800); 
+    }
+
+    function showForm() {
+      document.getElementById('actions-container').style.display = 'none';
+      let form = document.getElementById('form-container');
+      form.style.display = 'block';
+      
+      setTimeout(() => {
+        form.style.opacity = '1';
+        form.style.transform = 'translateY(0)';
+      }, 50);
+    }
+
+    function decline() {
+      document.getElementById('actions-container').style.display = 'none';
+      let msg = document.getElementById('message-container');
+      msg.innerHTML = '<h3 style="color:#555; font-weight:700; background:rgba(255,255,255,0.9); padding:15px; border-radius:10px; text-align:center;">جای شما خالی خواهد بود! 🌹</h3>';
+      msg.style.display = 'block';
+      
+      setTimeout(() => {
+        msg.style.opacity = '1';
+        msg.style.transform = 'translateY(0)';
+      }, 50);
+    }
+
+    function submitForm() {
+      let name = document.getElementById('guestName').value;
+      
+      if(name.trim() !== '') {
+        let btn = document.querySelector('.btn-submit');
+        btn.innerText = 'در حال ارسال... ⏳';
+        btn.disabled = true;
+
+        let myEmail = "Mobina.tayebi1408@gmail.com"; 
+
+        fetch("https://formsubmit.co/ajax/" + myEmail, {
+            method: "POST",
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                "موضوع": "تاییدیه کارت دعوت",
+                "نام مهمان": name,
+                "وضعیت": "حتما شرکت می‌کند ✅"
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('form-container').style.display = 'none';
+            let msg = document.getElementById('message-container');
+            msg.innerHTML = '<h3 style="color:#677852; font-weight:700; background:rgba(255,255,255,0.95); padding:20px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.1); text-align:center;">ممنونیم ' + name + ' عزیز،<br><br>باعث افتخارمونه که شمارو کنارمون داشته باشیم</h3>';
+            msg.style.display = 'block';
+            
+            setTimeout(() => {
+              msg.style.opacity = '1';
+              msg.style.transform = 'translateY(0)';
+            }, 50);
+        })
+        .catch(error => {
+            alert('ارتباط با سرور برقرار نشد. لطفا دوباره تلاش کنید.');
+            btn.innerText = 'ثبت نام';
+            btn.disabled = false;
+        });
+
+      } else {
+        alert('لطفا نام خود را وارد کنید.');
+      }
+    }
+  </script>
+
+</body>
+</html>
